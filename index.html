@@ -270,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://hanlihui.com/2018/05/29/设计模式—— 单例/">
+    <link itemprop="mainEntityOfPage" href="http://hanlihui.com/2018/05/29/设计模式(一) 单例/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="点滴随笔，程序人生！">
@@ -289,7 +289,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/29/设计模式—— 单例/" itemprop="url">设计模式—— 单例</a></h1>
+                <a class="post-title-link" href="/2018/05/29/设计模式(一) 单例/" itemprop="url">设计模式(一) 单例</a></h1>
         
 
         <div class="post-meta">
@@ -364,7 +364,7 @@
         
           
             <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>​    单例模式属于创建型模式，涉及到一个单一的类，该类负责创建自己的对象，同时确保只有唯一对象被创建。单例模式通过确保某个类在应用中只存在一个实例的做法，同时解决了两个问题：对象与现实中的资源对应问题和封装共享资源的问题。这个被称为单例的对象，会被所有需要使用它的组件共享。</p>
- <img src="/2018/05/29/设计模式—— 单例/2018/05/29/设计模式——%20单例/singleton0.png">
+ <img src="/2018/05/29/设计模式(一) 单例/2018/05/29/设计模式(一)%20单例/singleton0.png">
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>实现单例模式的时候，需要注意以下几点</p>
 <ol>
 <li>单例必须是该类唯一的实例</li>
@@ -379,7 +379,7 @@
 <p>​    并发的问题非常常见，swift的数组并不是线程安全的。就是说当多个线程可以同时调用数组的append方法，对同一个数组进行操作，这会破坏数据的结果。</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> queue = <span class="type">DispatchQueue</span>(label: <span class="string">"singleton"</span>, qos: .utility, attributes: .concurrent)</span><br><span class="line"><span class="keyword">let</span> group = <span class="type">DispatchGroup</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="built_in">count</span> <span class="keyword">in</span> <span class="number">0</span> ..&lt; <span class="number">100</span> &#123;</span><br><span class="line">    queue.async(group: group)&#123;</span><br><span class="line">        mySingleton.backup(item: <span class="string">"<span class="subst">\(<span class="built_in">count</span>)</span>"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">group.wait()</span><br></pre></td></tr></table></figure>
 <p>使用GCD模拟并发，只有两个或更多线程同时执行存在冲突的时候才会发生，并不会100%出错，报错截图如下： </p>
-<img src="/2018/05/29/设计模式—— 单例/2018/05/29/设计模式——%20单例/singleton1.png">
+<img src="/2018/05/29/设计模式(一) 单例/2018/05/29/设计模式(一)%20单例/singleton1.png">
 <p>为了解决这个问题，我们需要保证在同一时刻只允许一个Block处理数组的append方法。 采取串行访问，代码如下：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MySingleton2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> shared = <span class="type">MySingleton2</span>()</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> data = [<span class="type">String</span>]()</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">let</span> arrayQ = <span class="type">DispatchQueue</span>(label: <span class="string">"arrayQ"</span>)  <span class="comment">// 创建串行队列</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">init</span>() &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">backup</span><span class="params">(item:String)</span></span>  &#123;</span><br><span class="line">        arrayQ.sync &#123;           <span class="comment">// 将任务加到串行队列中，同步执行</span></span><br><span class="line">            data.append(item)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"count:<span class="subst">\(data.<span class="built_in">count</span>)</span>"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">getData</span><span class="params">()</span></span> -&gt; [<span class="type">String</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>单例使用时注意事项：</p>
