@@ -1132,6 +1132,7 @@ pre .javascript .function {
   font-size: 20px;
   font-weight: normal;
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+  text-shadow: 0 0 20px #fdec84, 10px -10px 30px #ffae35, 20px -20px 40px #ec760c, -20px -60px 50px #cd4607, 0px -80px 60px #973717, 10px -40px 70px #451b0e;
 }
 .site-subtitle {
   margin-top: 10px;
@@ -1823,7 +1824,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #3c63b6;
+  background: #ccbe0f;
 }
 .links-of-blogroll {
   font-size: 13px;
