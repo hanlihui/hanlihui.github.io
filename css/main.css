@@ -1126,10 +1126,11 @@ pre .javascript .function {
   vertical-align: top;
 }
 .site-title {
-  color: #aaa;
-  font-size: 2em;
-  font-family: "Comic Sans MS", cursive, LiSu, sans-serif;
-  text-decoration: none;
+  display: inline-block;
+  vertical-align: top;
+  line-height: 36px;
+  font-size: 20px;
+  font-weight: normal;
 }
 .site-subtitle {
   margin-top: 10px;
@@ -1821,7 +1822,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #d0fb24;
+  background: #5744ff;
 }
 .links-of-blogroll {
   font-size: 13px;
